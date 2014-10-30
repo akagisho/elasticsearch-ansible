@@ -1,0 +1,25 @@
+---
+- name: change apt repository to jp
+  replace:
+    dest=/etc/apt/sources.list
+    regexp="http://archive\.ubuntu\.com/"
+    replace="http://jp.archive.ubuntu.com/"
+
+- name: set timezone to Asia/Tokyo
+  copy:
+    src=etc/timezone
+    dest=/etc/timezone
+
+- name: add 'UseDNS no' to sshd_config
+  lineinfile:
+    dest=/etc/ssh/sshd_config
+    regexp="^UseDNS\s"
+    line="UseDNS no"
+  notify: restart ssh
+
+- name: set 'PermitRootLogin' to 'without-password'
+  lineinfile:
+    dest=/etc/ssh/sshd_config
+    regexp="^PermitRootLogin\s"
+    line="PermitRootLogin without-password"
+  notify: restart ssh

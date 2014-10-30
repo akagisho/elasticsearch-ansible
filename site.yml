@@ -1,0 +1,7 @@
+---
+- hosts: master
+  sudo: yes
+  roles:
+    - common
+    - elasticsearch
+    - kibana

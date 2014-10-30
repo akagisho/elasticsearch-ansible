@@ -1,0 +1,34 @@
+---
+- name: install depences
+  apt:
+    update_cache=yes
+    pkg={{ item }}
+  with_items:
+    - nginx
+
+- name: get kibana
+  get_url:
+    url=https://download.elasticsearch.org/kibana/kibana/{{ kibana_ver }}.tar.gz
+    dest=/usr/local/src/{{ kibana_ver }}.tar.gz
+
+- name: unarchive sources
+  shell:
+    test -d {{ kibana_ver }}
+    || (tar xzf {{ kibana_ver }}.tar.gz && echo OK)
+    chdir=/usr/local/src
+  register: result
+  changed_when: "'OK' in result.stdout"
+
+- name: copy sources
+  shell:
+    mkdir /var/www
+    && cp -r {{ kibana_ver }} /var/www/kibana
+    && touch /var/www/kibana/{{ kibana_ver }}
+    chdir=/usr/local/src
+    creates=/var/www/kibana/{{ kibana_ver }}
+
+- name: put nginx config
+  copy:
+    src=etc/nginx/conf.d/kibana.conf
+    dest=/etc/nginx/conf.d/kibana.conf
+  notify: reload nginx
