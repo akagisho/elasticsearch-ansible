@@ -37,7 +37,8 @@
     update-rc.d elasticsearch defaults 95
     creates=/etc/rc2.d/S95elasticsearch
 
-- name: start elasticsearch
-  service:
-    name=elasticsearch
-    state=started
+- name: set elasticsearch config file
+  copy:
+    src=etc/default/elasticsearch
+    dest=/etc/default/elasticsearch
+  notify: restart elasticsearch
