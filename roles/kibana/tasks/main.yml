@@ -27,6 +27,12 @@
     chdir=/usr/local/src
     creates=/var/www/kibana/{{ kibana_ver }}
 
+- name: create nginx option config
+  shell:
+    mkdir /etc/nginx/conf.d/kibana
+    && touch /etc/nginx/conf.d/kibana/opt.conf
+    creates=/etc/nginx/conf.d/kibana/opt.conf
+
 - name: put nginx config
   copy:
     src=etc/nginx/conf.d/kibana.conf
